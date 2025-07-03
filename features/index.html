@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Detection Test • Basar.js</title>
+  <meta name="description" content="Test NSFW and face/gender detection with Human.js and TensorFlow.js">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/@vladmandic/human@3.3.5/dist/human.min.js"></script>
+  <style>
+    .media-preview {
+      max-width: 100vw;
+      max-height: 60vh;
+      width: auto;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+      background: #222;
+      object-fit: contain;
+      border-radius: var(--pico-border-radius);
+      box-shadow: 0 2px 16px rgba(0, 0, 0, 0.10);
+    }
+
+    .media-container {
+      position: relative;
+      display: inline-block;
+      width: 100%;
+    }
+
+    .region-blur-overlay {
+      background: rgba(255, 255, 255, 0.01);
+    }
+
+    #preview,
+    #videoPreview {
+      text-align: center;
+    }
+
+    .summary {
+      margin-top: 1em;
+    }
+
+    .pico-switch {
+      margin-right: 1em;
+    }
+  </style>
+</head>
+
+<body>
+  <button id="forceReloadBtn" type="button" class="contrast" style="position: fixed; top: 1.5rem; right: 2rem; z-index: 1000; min-width: 160px; font-size: 1.1rem; padding: 0.75em 1.5em; box-shadow: 0 2px 8px rgba(0,0,0,0.10);">Force Reload Models</button>
+  <header class="container">
+    <hgroup>
+      <h1>Basar.js Detection Test</h1>
+      <p>Test NSFW and face/gender detection using Human.js and TensorFlow.js</p>
+    </hgroup>
+    <nav>
+      <ul>
+        <li><a href="https://github.com/ahmedrowaihi/basar" target="_blank">GitHub</a></li>
+      </ul>
+    </nav>
+  </header>
+  <main class="container">
+    <section style="max-width: 600px; margin: 2rem auto;">
+      <h2>Image Detection</h2>
+      <article style="padding: 2rem; border-radius: var(--pico-border-radius); box-shadow: 0 2px 16px rgba(0,0,0,0.08); background: var(--pico-background-secondary);">
+        <form id="imageForm" style="margin-bottom: 1.5rem;">
+          <div class="grid" style="align-items: end; gap: 1.5rem;">
+            <label for="fileInput" style="flex: 1;">
+              <span style="font-weight: 500;">Select image</span>
+              <input type="file" id="fileInput" accept="image/*" style="margin-top: 0.5rem;" />
+            </label>
+            <label for="unblurHover" style="display: flex; align-items: center; gap: 0.5rem;">
+              <input type="checkbox" id="unblurHover" role="switch" class="pico-switch" style="margin: 0;" />
+              <span>Unblur on hover</span>
+            </label>
+          </div>
+        </form>
+        <div id="clipboardHint" style="margin-bottom: 1rem;"><em>Or paste an image from your clipboard (Ctrl+V / Cmd+V)</em></div>
+        <div id="preview" style="margin-top: 2rem;"></div>
+      </article>
+    </section>
+    <section style="max-width: 600px; margin: 2rem auto;">
+      <h2>Video Detection</h2>
+      <article style="padding: 2rem; border-radius: var(--pico-border-radius); box-shadow: 0 2px 16px rgba(0,0,0,0.08); background: var(--pico-background-secondary);">
+        <form id="videoForm" style="margin-bottom: 1.5rem;">
+          <label for="videoInput" style="font-weight: 500;">Select video
+            <input type="file" id="videoInput" accept="video/*" style="margin-top: 0.5rem;" />
+          </label>
+        </form>
+        <div id="videoPreview" style="margin-top: 2rem;"></div>
+      </article>
+    </section>
+  </main>
+  <script type="module" defer src="./demo.ts"></script>
+</body>
+
+</html>

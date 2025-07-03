@@ -1,0 +1,26 @@
+{
+    "name": "basar",
+    "module": "index.ts",
+    "type": "module",
+    "version": "0.0.1",
+    "author": "Ahmed Rowaihi <ahmedrowaihi@gmail.com>",
+    "description": "A library for detecting NSFW content and faces in images and videos using TensorFlow.js and Human.js.",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/ahmedrowaihi/basar"
+    },
+    "homepage": "https://github.com/ahmedrowaihi/basar",
+    "scripts": {},
+    "devDependencies": {
+        "@tensorflow/tfjs-core": "^4.22.0",
+        "@types/bun": "latest"
+    },
+    "peerDependencies": {
+        "typescript": "^5.0.0"
+    },
+    "dependencies": {
+        "@tensorflow/tfjs-converter": "^4.22.0",
+        "@vladmandic/human": "^3.3.5"
+    }
+}
