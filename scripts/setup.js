@@ -2,14 +2,13 @@
 
 import { fileURLToPath } from "url";
 import { dirname, join, resolve } from "path";
-import { existsSync, mkdirSync, copyFileSync, writeFileSync } from "fs";
+import { existsSync, mkdirSync, copyFileSync } from "fs";
 import { createWriteStream } from "fs";
 import { pipeline } from "stream/promises";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-// Model files to download
 const MODEL_FILES = [
   "group1-shard1of1",
   "group1-shard1of5.bin",
@@ -20,7 +19,6 @@ const MODEL_FILES = [
   "model.json",
 ];
 
-// Base URL for downloading models (you can change this to your CDN or GitHub releases)
 const MODEL_BASE_URL =
   "https://raw.githubusercontent.com/ahmedrowaihi/basar/main/models/nsfwjs";
 
@@ -44,11 +42,10 @@ async function downloadFile(url, destPath) {
 }
 
 async function setup() {
-  const projectRoot = process.cwd(); // Current working directory where the command is run
+  const projectRoot = process.cwd();
 
   console.log("🧠 Setting up Basar...");
 
-  // Check if we're in a project directory
   const packageJsonPath = join(projectRoot, "package.json");
   if (!existsSync(packageJsonPath)) {
     console.error("❌ Error: package.json not found.");
@@ -58,21 +55,18 @@ async function setup() {
     process.exit(1);
   }
 
-  // Create public directory if it doesn't exist
   const publicDir = join(projectRoot, "public");
   if (!existsSync(publicDir)) {
     console.log("📁 Creating public directory...");
     mkdirSync(publicDir, { recursive: true });
   }
 
-  // Create basar-worker directory
   const basarWorkerDir = join(publicDir, "basar-worker");
   if (!existsSync(basarWorkerDir)) {
     console.log("📁 Creating public/basar-worker directory...");
     mkdirSync(basarWorkerDir, { recursive: true });
   }
 
-  // Try to find worker file in different locations
   const possibleWorkerSources = [
     join(
       projectRoot,
@@ -109,20 +103,17 @@ async function setup() {
     process.exit(1);
   }
 
-  // Create models directory
   const modelsDir = join(publicDir, "models", "nsfwjs");
   if (!existsSync(modelsDir)) {
     console.log("📁 Creating public/models/nsfwjs directory...");
     mkdirSync(modelsDir, { recursive: true });
   }
 
-  // Download model files
   console.log("📥 Downloading model files...");
   const downloadPromises = MODEL_FILES.map(async (filename) => {
     const url = `${MODEL_BASE_URL}/${filename}`;
     const destPath = join(modelsDir, filename);
 
-    // Skip if file already exists
     if (existsSync(destPath)) {
       console.log(`⚠️  ${filename} already exists, skipping...`);
       return;
@@ -142,37 +133,20 @@ async function setup() {
     process.exit(1);
   }
 
-  // Create a .gitignore entry for models if it doesn't exist
-  const gitignorePath = join(projectRoot, ".gitignore");
-  const gitignoreEntry =
-    "\n# Basar models (downloaded automatically)\npublic/models/\n";
-
-  if (existsSync(gitignorePath)) {
-    const gitignoreContent = await import("fs").then((fs) =>
-      fs.readFileSync(gitignorePath, "utf8")
-    );
-    if (!gitignoreContent.includes("public/models/")) {
-      writeFileSync(gitignorePath, gitignoreContent + gitignoreEntry, "utf8");
-      console.log("📝 Added models to .gitignore");
-    }
-  } else {
-    writeFileSync(gitignorePath, gitignoreEntry, "utf8");
-    console.log("📝 Created .gitignore with models entry");
-  }
-
   console.log("\n🎉 Basar setup complete!");
   console.log("\n📋 What was set up:");
   console.log("   • Worker file: public/basar-worker/index.js");
   console.log("   • Models: public/models/nsfwjs/");
-  console.log("   • .gitignore: Updated to exclude models");
   console.log("\n🚀 You can now use Basar in your app:");
   console.log('   import { detect } from "basar";');
   console.log(
     "\n💡 Note: Models are downloaded from GitHub. For production, consider hosting them on your own CDN."
   );
+  console.log(
+    "\n⚠️  Important: Make sure to commit the models to your repository for deployment!"
+  );
 }
 
-// If this file is run directly, execute the setup
 if (import.meta.url === `file://${process.argv[1]}`) {
   setup();
 }

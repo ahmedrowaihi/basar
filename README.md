@@ -30,7 +30,8 @@ This command:
 - Downloads the required ML models from GitHub
 - Copies the worker file to `public/basar-worker/index.js`
 - Creates necessary directories
-- Updates `.gitignore` to exclude models
+
+**Important**: The models will be committed to your repository by default. This ensures they're available when your app is deployed.
 
 ### Manual Setup
 
@@ -161,6 +162,18 @@ export function useBasar(image: HTMLImageElement | null) {
 bun run build
 ```
 
+## Deployment
+
+### For Production Deployments
+
+The models are committed to your repository by default. This ensures they're available when your app is deployed to platforms like Vercel, Netlify, or any other hosting service.
+
+If you prefer not to commit the models (to keep your repository smaller), you can:
+
+1. Add `public/models/` to your `.gitignore`
+2. Set up a build step to download models during deployment
+3. Host models on a CDN and update the worker to load from there
+
 ## Troubleshooting
 
 ### Setup Issues
@@ -182,3 +195,11 @@ If models fail to download:
 1. Check your internet connection
 2. Download models manually from [GitHub](https://github.com/ahmedrowaihi/basar/tree/main/models/nsfwjs)
 3. Place them in `public/models/nsfwjs/`
+
+### Deployment Issues
+
+If your app fails in production:
+
+1. Ensure models are committed to your repository
+2. Check that the worker file is accessible at `/basar-worker/index.js`
+3. Verify model files are accessible at `/models/nsfwjs/`
