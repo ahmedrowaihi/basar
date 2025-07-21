@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "declaration": true,
+    "outDir": "./dist",
+    "moduleResolution": "node",
+    "target": "ESNext",
+    "module": "ESNext",
+    "allowImportingTsExtensions": false,
+    "verbatimModuleSyntax": false
+  },
+  "include": ["index.ts", "features/**/*.ts"],
+  "exclude": ["node_modules", "dist", "examples"]
+}

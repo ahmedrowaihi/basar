@@ -102,7 +102,7 @@ export async function detect(
         let face = false;
         let gender: "male" | "female" | "unknown" | null = null;
         let details: DetectionResult["details"] = {};
-        // NSFW detection
+
         if (options.detectNSFW) {
             const resized = tf.image.resizeBilinear(tensor, [224, 224]);
             const floatResized = tf.cast(resized, "float32");
@@ -115,7 +115,7 @@ export async function detect(
                 (pred as any).data === undefined &&
                 typeof pred === "object"
             ) {
-                // NamedTensorMap: get first value
+
                 nsfwTensor = Object.values(pred)[0];
             } else {
                 nsfwTensor = pred as tfType.Tensor;
@@ -137,12 +137,12 @@ export async function detect(
             tf.dispose([resized, floatResized, normalized]);
         }
 
-        // Face/gender detection
+
         if (options.detectGender) {
             const predictions = await human.detect(input);
             details.human = predictions;
             if (predictions.face && predictions.face.length > 0) {
-                // Find the face with the highest genderScore
+
                 let bestFace = predictions.face[0];
                 for (const f of predictions.face) {
                     if ((f.genderScore ?? 0) > (bestFace.genderScore ?? 0)) {

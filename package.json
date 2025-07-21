@@ -1,6 +1,8 @@
 {
     "name": "basar",
-    "module": "index.ts",
+    "main": "./dist/index.js",
+    "module": "./dist/index.js",
+    "types": "./dist/index.d.ts",
     "type": "module",
     "version": "0.0.1",
     "author": "Ahmed Rowaihi <ahmedrowaihi@gmail.com>",
@@ -11,7 +13,15 @@
         "url": "https://github.com/ahmedrowaihi/basar"
     },
     "homepage": "https://github.com/ahmedrowaihi/basar",
-    "scripts": {},
+    "bin": {
+        "basar": "./scripts/cli.js"
+    },
+    "scripts": {
+        "build": "bun build:worker && bun build:ts",
+        "build:worker": "bun run build.ts",
+        "build:ts": "bunx tsc --project tsconfig.build.json",
+        "prepublishOnly": "bun run build"
+    },
     "devDependencies": {
         "@tensorflow/tfjs-core": "^4.22.0",
         "@types/bun": "latest"
@@ -21,6 +31,34 @@
     },
     "dependencies": {
         "@tensorflow/tfjs-converter": "^4.22.0",
-        "@vladmandic/human": "^3.3.5"
+        "@vladmandic/human": "^3.3.5",
+        "comlink": "^4.4.2"
+    },
+    "files": [
+        "dist",
+        "models",
+        "scripts"
+    ],
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "import": "./dist/index.js",
+            "require": "./dist/index.js"
+        },
+        "./worker-client": {
+            "types": "./dist/features/worker-client.d.ts",
+            "import": "./dist/features/worker-client.js",
+            "require": "./dist/features/worker-client.js"
+        },
+        "./worker": {
+            "types": "./dist/features/worker/index.d.ts",
+            "import": "./dist/features/worker/index.js",
+            "require": "./dist/features/worker/index.js"
+        },
+        "./types": {
+            "types": "./dist/features/detection/types.d.ts",
+            "import": "./dist/features/detection/types.js",
+            "require": "./dist/features/detection/types.js"
+        }
     }
 }

@@ -1,2 +1,1 @@
-export * from "./detection";
-export * from "./blur";
+export { detect } from "./worker-client";
