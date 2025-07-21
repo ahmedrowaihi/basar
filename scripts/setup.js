@@ -23,8 +23,6 @@ const MODEL_BASE_URL =
   "https://raw.githubusercontent.com/ahmedrowaihi/basar/main/models/nsfwjs";
 
 async function downloadFile(url, destPath) {
-  console.log(`📥 Downloading ${url}...`);
-
   try {
     const response = await fetch(url);
     if (!response.ok) {
@@ -33,8 +31,6 @@ async function downloadFile(url, destPath) {
 
     const fileStream = createWriteStream(destPath);
     await pipeline(response.body, fileStream);
-
-    console.log(`✅ Downloaded ${destPath}`);
   } catch (error) {
     console.error(`❌ Failed to download ${url}:`, error.message);
     throw error;
@@ -57,13 +53,11 @@ async function setup() {
 
   const publicDir = join(projectRoot, "public");
   if (!existsSync(publicDir)) {
-    console.log("📁 Creating public directory...");
     mkdirSync(publicDir, { recursive: true });
   }
 
   const basarWorkerDir = join(publicDir, "basar-worker");
   if (!existsSync(basarWorkerDir)) {
-    console.log("📁 Creating public/basar-worker directory...");
     mkdirSync(basarWorkerDir, { recursive: true });
   }
 
@@ -91,9 +85,7 @@ async function setup() {
   const workerDest = join(basarWorkerDir, "index.js");
 
   if (workerSource) {
-    console.log("📄 Copying bundled worker file...");
     copyFileSync(workerSource, workerDest);
-    console.log("✅ Worker file copied successfully");
   } else {
     console.error("❌ Error: Worker file not found.");
     console.error("   Make sure you have installed basar: npm install basar");
@@ -105,45 +97,50 @@ async function setup() {
 
   const modelsDir = join(publicDir, "models", "nsfwjs");
   if (!existsSync(modelsDir)) {
-    console.log("📁 Creating public/models/nsfwjs directory...");
     mkdirSync(modelsDir, { recursive: true });
   }
 
-  console.log("📥 Downloading model files...");
-  const downloadPromises = MODEL_FILES.map(async (filename) => {
-    const url = `${MODEL_BASE_URL}/${filename}`;
+  const missingModels = [];
+  const existingModels = [];
+
+  for (const filename of MODEL_FILES) {
     const destPath = join(modelsDir, filename);
-
     if (existsSync(destPath)) {
-      console.log(`⚠️  ${filename} already exists, skipping...`);
-      return;
+      existingModels.push(filename);
+    } else {
+      missingModels.push(filename);
     }
+  }
 
-    await downloadFile(url, destPath);
-  });
+  if (missingModels.length > 0) {
+    console.log(`📥 Downloading ${missingModels.length} model files...`);
 
-  try {
-    await Promise.all(downloadPromises);
-    console.log("✅ All model files downloaded successfully");
-  } catch (error) {
-    console.error("❌ Failed to download some model files:", error.message);
-    console.error(
-      "   You may need to download them manually or check your internet connection."
-    );
-    process.exit(1);
+    const downloadPromises = missingModels.map(async (filename) => {
+      const url = `${MODEL_BASE_URL}/${filename}`;
+      const destPath = join(modelsDir, filename);
+      await downloadFile(url, destPath);
+    });
+
+    try {
+      await Promise.all(downloadPromises);
+      console.log("✅ Models downloaded successfully");
+    } catch (error) {
+      console.error("❌ Failed to download some model files:", error.message);
+      console.error(
+        "   You may need to download them manually or check your internet connection."
+      );
+      process.exit(1);
+    }
+  } else {
+    console.log("✅ All models already exist");
   }
 
   console.log("\n🎉 Basar setup complete!");
-  console.log("\n📋 What was set up:");
-  console.log("   • Worker file: public/basar-worker/index.js");
-  console.log("   • Models: public/models/nsfwjs/");
-  console.log("\n🚀 You can now use Basar in your app:");
-  console.log('   import { detect } from "basar";');
+  console.log("📋 Worker: public/basar-worker/index.js");
+  console.log("📋 Models: public/models/nsfwjs/");
+  console.log("\n🚀 Ready to use: import { detect } from 'basar'");
   console.log(
-    "\n💡 Note: Models are downloaded from GitHub. For production, consider hosting them on your own CDN."
-  );
-  console.log(
-    "\n⚠️  Important: Make sure to commit the models to your repository for deployment!"
+    "⚠️  Remember to commit models to your repository for deployment!"
   );
 }
 
