@@ -1,0 +1,31 @@
+{
+  "name": "basar-next-example",
+  "author": "Ahmed Rowaihi <ahmedrowaihi@gmail.com>",
+  "description": "An AI generated example of using basar in a next.js app because I'm too lazy to write it myself.",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "postinstall": "node ../../scripts/setup.js"
+  },
+  "dependencies": {
+    "basar": "file:../../",
+    "next": "15.4.2",
+    "react": "19.1.0",
+    "react-dom": "19.1.0"
+  },
+  "devDependencies": {
+    "typescript": "^5",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "@tailwindcss/postcss": "^4",
+    "tailwindcss": "^4",
+    "eslint": "^9",
+    "eslint-config-next": "15.4.2",
+    "@eslint/eslintrc": "^3"
+  }
+}
