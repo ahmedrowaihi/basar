@@ -36,7 +36,6 @@
     },
     "files": [
         "dist",
-        "models",
         "scripts"
     ],
     "exports": {

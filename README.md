@@ -19,17 +19,23 @@ npm install basar
 
 ## Setup
 
-### Next.js Setup
+### Automatic Setup
 
 ```bash
-npx basar setup-nextjs
+npx basar setup
 ```
 
-This copies the bundled worker file to `public/basar-worker/index.js` and models to `public/models/`.
+This command:
+
+- Downloads the required ML models from GitHub
+- Copies the worker file to `public/basar-worker/index.js`
+- Creates necessary directories
+- Updates `.gitignore` to exclude models
 
 ### Manual Setup
 
-Copy the bundled worker file from `node_modules/basar/dist/worker-bundle/index.js` and models from `node_modules/basar/models/` to your public directory.
+1. Copy the bundled worker file from `node_modules/basar/dist/worker-bundle/index.js` to your `public/basar-worker/index.js`
+2. Download the NSFW model files from [GitHub](https://github.com/ahmedrowaihi/basar/tree/main/models/nsfwjs) to your `public/models/nsfwjs/` directory
 
 ## Usage
 
@@ -157,13 +163,22 @@ bun run build
 
 ## Troubleshooting
 
-### Next.js Issues
+### Setup Issues
 
-1. Run `npx basar setup-nextjs`
-2. Verify `public/basar-worker/index.js` and `public/models/` exist
+1. Run `npx basar setup` to download models and set up worker
+2. Verify `public/basar-worker/index.js` and `public/models/nsfwjs/` exist
+3. Check that models were downloaded successfully
 
 ### Worker Loading Issues
 
 1. Check browser console for CORS errors
 2. Ensure worker file is accessible via HTTP (not file://)
 3. Verify worker path in browser's Network tab
+
+### Model Download Issues
+
+If models fail to download:
+
+1. Check your internet connection
+2. Download models manually from [GitHub](https://github.com/ahmedrowaihi/basar/tree/main/models/nsfwjs)
+3. Place them in `public/models/nsfwjs/`

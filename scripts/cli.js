@@ -9,13 +9,13 @@ const __dirname = dirname(__filename);
 const args = process.argv.slice(2);
 const command = args[0];
 
-const setupNextjs = async () => {
-  const { setupNextjs } = await import("./setup-nextjs.js");
-  return setupNextjs();
+const setup = async () => {
+  const { setup } = await import("./setup.js");
+  return setup();
 };
 
 const commands = {
-  "setup-next": setupNextjs,
+  setup: setup,
 };
 
 if (!command || command === "--help" || command === "-h") {
@@ -26,11 +26,11 @@ Usage:
   npx basar <command>
 
 Commands:
-  setup-next    Set up Basar for Next.js projects
+  setup         Set up Basar for any framework (downloads models)
   --help, -h    Show this help message
 
 Examples:
-  npx basar setup-next
+  npx basar setup
 `);
   process.exit(0);
 }
